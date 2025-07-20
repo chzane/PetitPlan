@@ -1,55 +1,104 @@
 // 主页
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from "react"
+import { Input } from "@/components/ui/input"
 import TodoCard from "@/components/TodoCard"
+import type { TodoItem } from "@/utils/TodoStorage"
+import { TodoStorage } from "@/utils/TodoStorage"
+import Icon from "@/components/Icon"
+import { useTranslation } from "react-i18next"
 
-function HomePage() {
+// 创建任务输入框
+function CreateTodoInput({ onCreate }: { onCreate: (title: string) => void }) {
+    const { t } = useTranslation();
+    const [title, setTitle] = useState("");   // 新任务标题
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+        const isModifierPressed = isMac ? event.metaKey : event.ctrlKey;
+
+        // 当按下了回车键+修饰键（command或者control）时，创建任务
+        if (
+            event.key === "Enter" &&
+            isModifierPressed &&
+            title.trim()
+        ) {
+            onCreate(title.trim());
+            setTitle("");   // 清空输入框
+        }
+    };
+
     return (
-        <main className="p-6 space-y-6">
+        <div className="fixed bottom-0 left-0 w-full bg-white p-6 shadow-md">
+            <Input
+                type="text"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={t("todo.createTodoTitle")}
+            />
+        </div>
+    );
+}
+
+// 主页
+function HomePage() {
+    const [ncTodoList, setNcTodoList] = useState<TodoItem[]>([]);
+
+
+    // 获取未完成的任务
+    const getNotCompletedTodoList = () => {
+        const todos = TodoStorage.getTodos();
+        return todos.filter(todo => !todo.completedAt);
+    }
+
+    useEffect(() => {
+        setNcTodoList(getNotCompletedTodoList());
+    }, [ncTodoList]);
+
+    return (
+        <main className="h-screen flex flex-col">
             {/* 顶部栏 */}
-            <header className="flex justify-between items-center">
+            <header className="h-[65px] flex items-center justify-between px-6">
                 <h1 className="text-2xl font-bold">今天</h1>
-                <Button variant="outline" size="sm">添加任务</Button>
             </header>
 
             {/* 今日任务列表 */}
-            <section>
-                <h2 className="text-lg font-semibold mb-2">待办事项</h2>
-                <ul className="space-y-3">
-                    <TodoCard
-                        todo={{
-                            id: "1",
-                            title: "🛒 去菜市场买菜",
-                            content: "胡萝卜、西兰花、番茄",
-                            createdAt: new Date().toISOString(),
-                            completedAt: "",
-                            location: "北京",
-                            tags: ["购物", "健康"],
-                            dueDate: "2025-07-23T18:00:00.000Z"
-                        }}
-                        onComplete={(id) => console.log("完成待办：", id)}
-                    />
-                    <TodoCard
-                        todo={{
-                            id: "2",
-                            title: "🔧 检查服务器状态",
-                            content: "SolariiX HK 1 Server",
-                            createdAt: new Date().toISOString(),
-                            completedAt: "",
-                            tags: ["运维"],
-                            dueDate: "2025-07-23T18:00:00.000Z",
-                            attachments: [
-                                {
-                                    id: '1_attachment_1',
-                                    type: 'image',
-                                    url: 'https://example.com/image.jpg',
-                                    name: '服务器位置图片'
-                                }
-                            ]
-                        }}
-                        onComplete={(id) => console.log("完成待办：", id)}
-                    />
+            <section className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+                <ul className="space-y-3 overflow-y-auto">
+                    {ncTodoList.map((item) => (
+                        <TodoCard
+                            todo={item}
+                            onComplete={(id) => console.log("完成待办：", id)}
+                        />
+                    ))}
+                    {ncTodoList.length == 0 && (
+                        <span className="flex flex-col items-center justify-center text-center text-neutral-400">
+                            <Icon name="box" w="32px" h="32px" className="text-neutral-400" />
+                            <span>空空如也，在下方输入框中创建新任务</span>
+                        </span>
+                    )}
                 </ul>
             </section>
+
+            {/* 创建任务输入框 */}
+            <footer className="h-[80px] w-full border-t bg-white px-6 flex items-center">
+                <CreateTodoInput
+                    onCreate={(title) => {
+                        console.log("创建任务: ", title);
+
+                        const newTodo: TodoItem = {
+                            id: crypto.randomUUID(),
+                            title: title,
+                            content: "",
+                            createdAt: new Date().toISOString(),
+                            completedAt: null
+                        };
+
+                        TodoStorage.addTodo(newTodo);
+                        setNcTodoList(prev => [...prev, newTodo]);
+                    }}
+                />
+            </footer>
         </main>
     );
 }
