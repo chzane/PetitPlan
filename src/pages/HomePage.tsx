@@ -86,16 +86,47 @@ function HomePage() {
     const [pendingTodos, setPendingTodos] = useState<TodoItem[]>([]);
     const [inProgressTodos, setInProgressTodos] = useState<TodoItem[]>([]);
     const [doneTodos, setDoneTodos] = useState<TodoItem[]>([]);
-    const [activeTodo, setActiveTodo] = useState<TodoItem | null>(null); 
+    const [activeTodo, setActiveTodo] = useState<TodoItem | null>(null);
 
 
     // 获取任务列表
     const classifyTodos = () => {
         const todos = TodoStorage.getTodos();
 
-        setPendingTodos(todos.filter(todo => todo.status === "pending" && !todo.completedAt));
-        setInProgressTodos(todos.filter(todo => todo.status === "in-progress" && !todo.completedAt));
-        setDoneTodos(todos.filter(todo => todo.status === "done" || !!todo.completedAt));
+        const sortByPriorityAndDeadline = (a: TodoItem, b: TodoItem) => {
+            // 先按 priority 升序
+            if ((a.priority ?? 3) !== (b.priority ?? 3)) {
+                return (a.priority ?? 3) - (b.priority ?? 3);
+            }
+
+            // 按照截止时间升序（早的排前面）
+            const deadlineA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+            const deadlineB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+            return deadlineA - deadlineB;
+        };
+
+        // 排序已完成任务，新的排前面
+        const sortByCompletedTimeDesc = (a: TodoItem, b: TodoItem) => {
+            const completedAtA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+            const completedAtB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+            return completedAtB - completedAtA;
+        };
+
+        const pending = todos
+            .filter(todo => todo.status === "pending" && !todo.completedAt)
+            .sort(sortByPriorityAndDeadline);
+
+        const inProgress = todos
+            .filter(todo => todo.status === "in-progress" && !todo.completedAt)
+            .sort(sortByPriorityAndDeadline);
+
+        const done = todos
+            .filter(todo => todo.status === "done" || !!todo.completedAt)
+            .sort(sortByCompletedTimeDesc);
+
+        setPendingTodos(pending);
+        setInProgressTodos(inProgress);
+        setDoneTodos(done);
     };
 
     useEffect(() => {
@@ -169,7 +200,7 @@ function HomePage() {
                 <DragOverlay>
                     {activeTodo ? (
                         <div style={{ minWidth: 280, maxWidth: 340 }}>
-                            <TodoCard todo={activeTodo} refresh={() => {}} listeners={{}} />
+                            <TodoCard todo={activeTodo} refresh={() => { }} listeners={{}} />
                         </div>
                     ) : null}
                 </DragOverlay>
