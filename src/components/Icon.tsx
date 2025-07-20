@@ -1,7 +1,7 @@
 import { ReactComponent as MapPin } from '../assets/icon/map-pin.svg';
 import { ReactComponent as CalendarTime } from '../assets/icon/map-pin.svg';
 import { ReactComponent as Link } from '../assets/icon/map-pin.svg';
-import { ReactComponent as Box } from '../assets/icon/map-pin.svg';
+import { ReactComponent as Box } from '../assets/icon/box.svg';
 
 const IconList: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     'map-pin': MapPin,
