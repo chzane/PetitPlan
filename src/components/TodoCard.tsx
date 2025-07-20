@@ -37,6 +37,8 @@ import PrioritySelect from "@/components/PrioritySelect"
 
 import { type TodoItem, TodoStorage } from "@/utils/TodoStorage"
 import { parseISO } from "date-fns"
+import clsx from "clsx"
+
 
 interface TodoDetailSheetProps {
     todo: TodoItem;
@@ -244,7 +246,20 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
                     }}
                     className="mt-2 w-full"
                 >
-                    <CardTitle>{todo.title}</CardTitle>
+                    <CardTitle className="gap-2 flex items-center">
+                        {(todo.priority ?? 3) < 3 && (
+                            <Badge
+                                variant="outline"
+                                className={clsx("text-white", {
+                                    "bg-red-500": todo.priority === 1,
+                                    "bg-orange-400": todo.priority === 2,
+                                })}
+                            >
+                                {t(`todo.priority.${todo.priority || '3'}`)}
+                            </Badge>
+                        )}
+                        {todo.title}
+                    </CardTitle>
                     <CardDescription>
                         {(todo.content && todo.content.length > 100
                             ? todo.content.slice(0, 100) + "..."
