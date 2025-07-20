@@ -18,10 +18,16 @@
         "tags": "标签",
         "attachments": "附件",
         "addedAttachments": "已添加{{num}}个附件",
+        "priority": "优先级",
+        "priorityMin": "最重要",
+        "priorityMax": "最不重要",
         "status": {
-            "todo": "未开始",
+            "label": "状态",
+            "placeholder": "选择状态",
+            "pending": "准备中",
             "inProgress": "进行中",
-            "done": "已完成"
+            "done": "已完成",
+            "cancelled": "已取消"
         },
         "repeatRule": {
             "none": "不重复",
@@ -29,6 +35,8 @@
             "weekly": "每周",
             "monthly": "每月"
         },
+        "viewDetails": "显示详细",
+        "start": "开始任务",
         "markAsDone": "标记为完成",
         "completed": "已完成",
         "createTodoTitle": "创建任务，按下Control(或Command)+Enter创建",
@@ -36,7 +44,6 @@
         "edit": "编辑任务",
         "delete": "删除任务",
         "save": "保存",
-        "cancel": "取消",
-        "viewDetails": "显示详细"
+        "cancel": "取消"
     }
 }

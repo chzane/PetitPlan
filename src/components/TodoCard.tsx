@@ -1,41 +1,157 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
     Card,
     CardAction,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
+    CardFooter
 } from "@/components/ui/card"
+import {
+    Sheet,
+    SheetContent,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
+import { useTranslation } from "react-i18next"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import Icon from "@/components/Icon"
-import type { TodoItem } from "@/utils/TodoStorage"
-import { useTranslation } from "react-i18next"
+import DatePicker from "@/components/DatePicker"
+import TagInput from "@/components/TagInput"
+import PrioritySelect from "@/components/PrioritySelect"
 
+import { type TodoItem, TodoStorage } from "@/utils/TodoStorage"
+import { parseISO } from "date-fns"
+
+interface TodoDetailSheetProps {
+    todo: TodoItem;
+    setSheetIsOpen: (isOpen: boolean) => void;
+};
 
 interface TodoCardProps {
     todo: TodoItem;
-    onComplete?: (id: string) => void;
+    refresh?: () => void;
+    listeners: React.HTMLAttributes<HTMLDivElement>;
+}
+
+// 待办任务详细信息侧边栏
+export function TodoDetailSheet({ todo, setSheetIsOpen, children }: TodoDetailSheetProps & { children: React.ReactNode }) {
+    const [data, setData] = useState<TodoItem>(todo);
+    const [open, setOpen] = useState(false);
+    const { t } = useTranslation();
+
+    // 自动保存逻辑
+    useEffect(() => {
+        if (data.id) {
+            TodoStorage.updateTodoField(data.id, "title", data.title || "UnKnown");
+            TodoStorage.updateTodoField(data.id, "content", data.content);
+            TodoStorage.updateTodoField(data.id, "dueDate", data.dueDate);
+            TodoStorage.updateTodoField(data.id, "priority", data.priority);
+            TodoStorage.updateTodoField(data.id, "tags", data.tags);
+            TodoStorage.updateTodoField(data.id, "status", data.status);
+            TodoStorage.updateTodoField(data.id, "location", data.location);
+
+            if (data.status === "done") {
+                const now = new Date().toISOString();
+                TodoStorage.updateTodoField(data.id, "completedAt", now);
+            }
+        }
+    }, [data]);
+
+    useEffect(() => {
+        setSheetIsOpen(open);   // 防止点击侧边栏也会更改是否显示详细信息
+    }, [open]);
+
+    const updateField = <K extends keyof TodoItem>(key: K, value: TodoItem[K]) => {
+        setData((prev) => ({ ...prev, [key]: value }));
+    };
+
+    return (
+        <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+                {children}
+            </SheetTrigger>
+            <SheetContent>
+                <div className="p-6 space-y-6 overflow-y-auto mt-6 max-h-full">
+                    <div className="space-y-2">
+                        <div>
+                            <Input value={data.title} placeholder={t('todo.title')} onChange={(e) => updateField("title", e.target.value)} />
+                        </div>
+
+                        <div>
+                            <Textarea value={data.content} placeholder={t('todo.content')} onChange={(e) => updateField("content", e.target.value)} />
+                        </div>
+                    </div>
+
+                    <div>
+                        <Label className="mb-2">
+                            {t('todo.dueDate')}
+                        </Label>
+                        <DatePicker
+                            value={data.dueDate ? parseISO(data.dueDate) : undefined}
+                            onChange={(date) => updateField("dueDate", date?.toISOString() || null)}
+                        />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2">
+                            {t('todo.priority')}
+                        </Label>
+                        <PrioritySelect
+                            value={data.priority}
+                            onChange={(val) => updateField("priority", val)}
+                        />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2">
+                            {t('todo.tags')}
+                        </Label>
+                        <TagInput
+                            value={data.tags}
+                            onChange={(tags) => updateField("tags", tags)}
+                        />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2">
+                            {t('todo.location')}
+                        </Label>
+                        <Input value={data.location ?? ""} onChange={(e) => updateField("location", e.target.value)} />
+                    </div>
+                </div>
+            </SheetContent>
+        </Sheet>
+    );
 }
 
 // 待办事项卡片
-function TodoCard({ todo, onComplete }: TodoCardProps) {
+function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
     const { t } = useTranslation();
 
     const [showDetailInfo, setShowDetailInfo] = useState(false);   // 是否显示详细信息
-    const handleComplete = () => {
-        if (onComplete) onComplete(todo.id);
-    };
+    const [sheetIsOpen, setSheetIsOpen] = useState(false);   // 侧边栏是否已经开启
+
+    useEffect(() => {
+        if (refresh) refresh();
+    }, [sheetIsOpen]);
 
     return (
         <Card>
             <CardHeader
                 onClick={e => {
                     if ((e.target as HTMLElement).closest("button")) return;   // 防止点击按钮的时候也触发显示详细
+                    if (sheetIsOpen) return;
                     setShowDetailInfo(!showDetailInfo);
                 }}
             >
+                <div {...listeners} style={{ cursor: "grab" }}>
+                    {/* 将卡片拖拽绑定到拖拽手柄上 */}
+                    <span style={{ marginRight: 8, userSelect: "none" }}>⠿</span>
+                </div>
                 <CardTitle>
                     {todo.title}
                 </CardTitle>
@@ -43,22 +159,41 @@ function TodoCard({ todo, onComplete }: TodoCardProps) {
                     {todo.content || t('todo.emptyContent')}
                 </CardDescription>
                 <CardAction>
-                    <Button
-                        variant="link"
-                        size="sm"
-                        onClick={handleComplete}
-                        disabled={!!todo.completedAt}
-                    >
-                        {t('todo.viewDetails')}
-                    </Button>
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleComplete}
-                        disabled={!!todo.completedAt}
-                    >
-                        {todo.completedAt ? t('todo.status.done') : t('todo.markAsDone')}
-                    </Button>
+                    <TodoDetailSheet todo={todo} key={todo.id} setSheetIsOpen={setSheetIsOpen}>
+                        <Button variant="ghost" size="sm">
+                            {t('todo.edit')}
+                        </Button>
+                    </TodoDetailSheet>
+                    {todo.status !== "done" && (
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                                let nextStatus: TodoItem["status"] | undefined;
+                                if (todo.status === "pending") {
+                                    nextStatus = "in-progress";
+                                } else if (todo.status === "in-progress") {
+                                    nextStatus = "done";
+                                }
+
+                                if (nextStatus) {
+                                    TodoStorage.updateTodoField(todo.id, "status", nextStatus);
+
+                                    // 如果完成，顺便记录完成时间
+                                    if (nextStatus === "done") {
+                                        TodoStorage.updateTodoField(todo.id, "completedAt", new Date().toISOString());
+                                    }
+
+                                    refresh?.();
+                                }
+                            }}
+                        >
+                            {todo.status === "pending"
+                                ? t("todo.start")
+                                : t("todo.markAsDone")
+                            }
+                        </Button>
+                    )}
                 </CardAction>
             </CardHeader>
             {showDetailInfo && (todo.dueDate || todo.location || (todo.tags?.length ?? 0) > 0 || (todo.attachments?.length ?? 0) > 0) && (

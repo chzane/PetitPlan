@@ -17,11 +17,17 @@
         "location": "Location",
         "tags": "Tags",
         "attachments": "Attachments",
+        "priority": "Priority",
+        "priorityMin": "Most important",
+        "priorityMax": "Least important",
         "addedAttachments": "{{num}} attachments added",
         "status": {
-            "todo": "To Do",
+            "label": "Status",
+            "placeholder": "Select Status",
+            "pending": "Pending",
             "inProgress": "In Progress",
-            "done": "Completed"
+            "done": "Completed",
+            "cancelled": "Cancelled"
         },
         "repeatRule": {
             "none": "No Repeat",
@@ -30,6 +36,7 @@
             "monthly": "Monthly"
         },
         "markAsDone": "Mark as done",
+        "start": "Start",
         "completed": "Completed",
         "createTodoTitle": "Create Task",
         "add": "Add Task",
@@ -37,6 +44,6 @@
         "delete": "Delete Task",
         "save": "Save",
         "cancel": "Cancel",
-        "viewDetails": "显示详细"
+        "viewDetails": "View Details"
     }
 }
