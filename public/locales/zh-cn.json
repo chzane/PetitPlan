@@ -3,9 +3,15 @@
         "title": "Petit Plan",
         "description": "小计划，大自在。让每一天，从 PetitPlan 开始。"
     },
+    "greetings": {
+        "goodMorning": "早上好！",
+        "goodAfternoon": "下午好！",
+        "goodEvening": "晚上好！"
+    },
     "todo": {
         "title": "标题",
         "content": "内容",
+        "emptyContent": "暂无描述",
         "dueDate": "截止日期",
         "dueDateReminderSentence": "截止至 {{date}}",
         "location": "位置",
@@ -25,10 +31,12 @@
         },
         "markAsDone": "标记为完成",
         "completed": "已完成",
+        "createTodoTitle": "创建任务，按下Control(或Command)+Enter创建",
         "add": "添加任务",
         "edit": "编辑任务",
         "delete": "删除任务",
         "save": "保存",
-        "cancel": "取消"
+        "cancel": "取消",
+        "viewDetails": "显示详细"
     }
 }

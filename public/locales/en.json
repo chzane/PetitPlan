@@ -3,9 +3,15 @@
         "title": "Petit Plan",
         "description": "Petite plans, pure peace. Start every day with PetitPlan."
     },
+    "greetings": {
+        "goodMorning": "Good Morning!",
+        "goodAfternoon": "Good Afternoon!",
+        "goodEvening": "Good Evening"
+    },
     "todo": {
         "title": "Title",
         "content": "Content",
+        "emptyContent": "No content",
         "dueDate": "Due Date",
         "dueDateSentence": "Until {{date}}",
         "location": "Location",
@@ -25,10 +31,12 @@
         },
         "markAsDone": "Mark as done",
         "completed": "Completed",
+        "createTodoTitle": "Create Task",
         "add": "Add Task",
         "edit": "Edit Task",
         "delete": "Delete Task",
         "save": "Save",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "viewDetails": "显示详细"
     }
 }
