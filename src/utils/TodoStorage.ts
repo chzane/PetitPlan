@@ -19,9 +19,9 @@ export interface TodoItem {
     id: string;   // Todo ID
     title: string;   // 待办标题
     content: string;   // 描述
-    completedAt: string;   // 完成时间(ISO 格式)
+    completedAt: string | null;   // 完成时间(ISO 格式)
     createdAt: string;   // 创建时间(ISO 格式)
-    dueDate?: string;   // 截止时间(ISO 格式)
+    dueDate?: string | null;   // 截止时间(ISO 格式)
     priority?: number;   // 优先级，数值越小越重要
     tags?: string[];   // 标签
     attachments?: Attachment[];   // 附件

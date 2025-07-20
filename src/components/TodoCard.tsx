@@ -40,9 +40,17 @@ function TodoCard({ todo, onComplete }: TodoCardProps) {
                     {todo.title}
                 </CardTitle>
                 <CardDescription>
-                    {todo.content}
+                    {todo.content || t('todo.emptyContent')}
                 </CardDescription>
                 <CardAction>
+                    <Button
+                        variant="link"
+                        size="sm"
+                        onClick={handleComplete}
+                        disabled={!!todo.completedAt}
+                    >
+                        {t('todo.viewDetails')}
+                    </Button>
                     <Button
                         variant="outline"
                         size="sm"
@@ -53,7 +61,7 @@ function TodoCard({ todo, onComplete }: TodoCardProps) {
                     </Button>
                 </CardAction>
             </CardHeader>
-            {showDetailInfo && (
+            {showDetailInfo && (todo.dueDate || todo.location || (todo.tags?.length ?? 0) > 0 || (todo.attachments?.length ?? 0) > 0) && (
                 <CardFooter className="text-sm">
                     <div className="flex flex-col gap-1 w-full">
                         <div className="flex items-center gap-4">
