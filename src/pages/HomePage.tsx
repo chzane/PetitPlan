@@ -11,7 +11,8 @@ import {
     useDroppable,
     useDraggable,
     DragOverlay,
-} from "@dnd-kit/core";
+} from "@dnd-kit/core"
+import Icon from "@/components/Icon"
 import { useTranslation } from "react-i18next"
 import { t } from "i18next"
 
@@ -178,6 +179,12 @@ function HomePage() {
                         {pendingTodos.map(todo => (
                             <DraggableTodoCard key={todo.id} todo={todo} classifyTodos={classifyTodos} />
                         ))}
+                        {pendingTodos.length == 0 && (
+                            <span className="flex flex-col items-center justify-center text-center text-neutral-400">
+                                <Icon name="box" w="32px" h="32px" className="text-neutral-400" />
+                                <span>{t('todo.emptyTodoList')}</span>
+                            </span>
+                        )}
                     </DroppableColumn>
 
                     <Separator orientation="vertical" />
@@ -186,6 +193,12 @@ function HomePage() {
                         {inProgressTodos.map(todo => (
                             <DraggableTodoCard key={todo.id} todo={todo} classifyTodos={classifyTodos} />
                         ))}
+                        {inProgressTodos.length == 0 && (
+                            <span className="flex flex-col items-center justify-center text-center text-neutral-400">
+                                <Icon name="box" w="32px" h="32px" className="text-neutral-400" />
+                                <span>{t('todo.emptyTodoList')}</span>
+                            </span>
+                        )}
                     </DroppableColumn>
 
                     <Separator orientation="vertical" />
@@ -194,6 +207,12 @@ function HomePage() {
                         {doneTodos.map(todo => (
                             <DraggableTodoCard key={todo.id} todo={todo} classifyTodos={classifyTodos} />
                         ))}
+                        {doneTodos.length == 0 && (
+                            <span className="flex flex-col items-center justify-center text-center text-neutral-400">
+                                <Icon name="box" w="32px" h="32px" className="text-neutral-400" />
+                                <span>{t('todo.emptyTodoList')}</span>
+                            </span>
+                        )}
                     </DroppableColumn>
                 </section>
 

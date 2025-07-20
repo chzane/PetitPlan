@@ -53,7 +53,8 @@
         "edit": "编辑任务",
         "delete": "删除任务",
         "save": "保存",
-        "cancel": "取消"
+        "cancel": "取消",
+        "emptyTodoList": "空空如也"
     },
     "dialog": {
         "deleteTodo": {

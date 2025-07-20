@@ -45,7 +45,8 @@
         "delete": "Delete Task",
         "save": "Save",
         "cancel": "Cancel",
-        "viewDetails": "View Details"
+        "viewDetails": "View Details",
+        "emptyTodoList": "Nothing here yet"
     },
     "dialog": {
         "deleteTodo": {
