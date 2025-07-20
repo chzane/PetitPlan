@@ -1,9 +1,11 @@
 import MapPin from '../assets/icon/map-pin.svg';
 import CalendarTime from '../assets/icon/calendar-time.svg';
+import Link from '../assets/icon/link.svg';
 
 const IconList: Record<string, string> = {
     'map-pin': MapPin,
-    'calendar-time': CalendarTime
+    'calendar-time': CalendarTime,
+    'link': Link
 };
 
 interface IconProps {
