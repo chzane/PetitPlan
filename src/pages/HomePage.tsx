@@ -46,14 +46,16 @@ function HomePage() {
 
 
     // 获取未完成的任务
-    const getNotCompletedTodoList = () => {
-        const todos = TodoStorage.getTodos();
-        return todos.filter(todo => !todo.completedAt);
-    }
+    const setNotCompletedTodoList = () => {
+        const todos = TodoStorage.getTodos()
+            .filter(todo => !todo.completedAt)
+            .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setNcTodoList(todos);
+    };
 
     useEffect(() => {
-        setNcTodoList(getNotCompletedTodoList());
-    }, [ncTodoList]);
+        setNotCompletedTodoList();
+    }, []);
 
     return (
         <main className="h-screen flex flex-col">
