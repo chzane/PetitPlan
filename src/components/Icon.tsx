@@ -6,8 +6,8 @@ const IconList: Record<string, string> = {
 
 interface IconProps {
     name: string;   // 图标名称
-    w: string;   // 图标宽度
-    h: string;   // 图标高度
+    w?: string;   // 图标宽度
+    h?: string;   // 图标高度
     alt?: string;   // 图标描述
     className?: string;   // class
     [key: string]: any;   // 其他属性
