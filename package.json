@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-separator": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@tailwindcss/vite": "^4.1.11",
@@ -22,7 +23,9 @@
     "react-i18next": "^15.6.0",
     "react-resizable-panels": "^3.0.3",
     "react-router-dom": "^7.7.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tailwind-scrollbar": "^4.0.2",
+    "vite-plugin-svgr": "^3.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",
