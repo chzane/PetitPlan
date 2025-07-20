@@ -62,6 +62,7 @@ export function TodoDetailSheet({ todo, setSheetIsOpen, children }: TodoDetailSh
         if (data.id) {
             TodoStorage.updateTodoField(data.id, "title", data.title || "UnKnown");
             TodoStorage.updateTodoField(data.id, "content", data.content);
+            TodoStorage.updateTodoField(data.id, "startDate", data.startDate);
             TodoStorage.updateTodoField(data.id, "dueDate", data.dueDate);
             TodoStorage.updateTodoField(data.id, "priority", data.priority);
             TodoStorage.updateTodoField(data.id, "tags", data.tags);
@@ -102,11 +103,22 @@ export function TodoDetailSheet({ todo, setSheetIsOpen, children }: TodoDetailSh
 
                     <div>
                         <Label className="mb-2">
+                            {t('todo.startDate')}
+                        </Label>
+                        <DatePicker
+                            value={data.startDate ? parseISO(data.startDate) : undefined}
+                            placeholder={t('todo.selectDatePlaceholder')}
+                            onChange={(date) => updateField("startDate", date?.toISOString() || null)}
+                        />
+                    </div>
+
+                    <div>
+                        <Label className="mb-2">
                             {t('todo.dueDate')}
                         </Label>
                         <DatePicker
                             value={data.dueDate ? parseISO(data.dueDate) : undefined}
-                            placeholder={t('todo.selectDueDatePlaceholder')}
+                            placeholder={t('todo.selectDatePlaceholder')}
                             onChange={(date) => updateField("dueDate", date?.toISOString() || null)}
                         />
                     </div>
@@ -153,6 +165,17 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
     useEffect(() => {
         refresh?.();
     }, [sheetIsOpen]);
+
+    // 格式化日期
+    const formatDate = (d: string | Date) =>
+        new Date(d).toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+        });   // 转换为 YYYY-MM-DD HH:mm 格式
 
     return (
         <Card>
@@ -271,13 +294,19 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
             {showDetailInfo && (todo.dueDate || todo.location || (todo.tags?.length ?? 0) > 0 || (todo.attachments?.length ?? 0) > 0) && (
                 <CardFooter className="text-sm">
                     <div className="flex flex-col gap-1 w-full">
-                        <div className="flex items-center gap-4">
-                            {/* 截止日期 */}
-                            {todo.dueDate && (
-                                <span className="flex items-center gap-1">
+                        <div className="flex flex-wrap items-center gap-1">
+                            {/* 开始/截止日期 */}
+                            {(todo.dueDate || todo.startDate) && (
+                                <div className="flex items-center gap-1">
                                     <Icon name="calendar-time" w="14px" h="14px" />
-                                    {t('todo.dueDateReminderSentence', { date: new Date(todo.dueDate).toLocaleString() })}
-                                </span>
+                                    {todo.startDate && (
+                                        formatDate(todo.startDate)
+                                    )}
+                                    {todo.startDate && todo.dueDate && "~"}
+                                    {todo.dueDate && (
+                                        formatDate(todo.dueDate)
+                                    )}
+                                </div>
                             )}
                             {/* 位置 */}
                             {todo.location && (

@@ -1,5 +1,5 @@
 import { ReactComponent as MapPin } from '../assets/icon/map-pin.svg';
-import { ReactComponent as CalendarTime } from '../assets/icon/map-pin.svg';
+import { ReactComponent as CalendarTime } from '../assets/icon/calendar-time.svg';
 import { ReactComponent as Link } from '../assets/icon/map-pin.svg';
 import { ReactComponent as Box } from '../assets/icon/box.svg';
 import { ReactComponent as PlayerPlay} from '../assets/icon/player-play.svg';

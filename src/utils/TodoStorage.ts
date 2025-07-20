@@ -19,6 +19,7 @@ export interface TodoItem {
     id: string;   // Todo ID
     title: string;   // 待办标题
     content: string;   // 描述
+    startDate?: string | null;   // 开始时间(ISO 格式)
     completedAt: string | null;   // 完成时间(ISO 格式)
     createdAt: string;   // 创建时间(ISO 格式)
     dueDate?: string | null;   // 截止时间(ISO 格式)
