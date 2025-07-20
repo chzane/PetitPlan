@@ -14,6 +14,7 @@
         "emptyContent": "No content",
         "dueDate": "Due Date",
         "dueDateSentence": "Until {{date}}",
+        "selectDueDatePlaceholder": "Select Due Date",
         "location": "Location",
         "tags": "Tags",
         "attachments": "Attachments",

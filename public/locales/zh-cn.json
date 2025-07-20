@@ -14,6 +14,7 @@
         "emptyContent": "暂无描述",
         "dueDate": "截止日期",
         "dueDateReminderSentence": "截止至 {{date}}",
+        "selectDueDatePlaceholder": "选择截止日期",
         "location": "位置",
         "tags": "标签",
         "attachments": "附件",

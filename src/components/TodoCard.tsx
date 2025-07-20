@@ -104,6 +104,7 @@ export function TodoDetailSheet({ todo, setSheetIsOpen, children }: TodoDetailSh
                         </Label>
                         <DatePicker
                             value={data.dueDate ? parseISO(data.dueDate) : undefined}
+                            placeholder={t('todo.selectDueDatePlaceholder')}
                             onChange={(date) => updateField("dueDate", date?.toISOString() || null)}
                         />
                     </div>
@@ -153,103 +154,105 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
 
     return (
         <Card>
-            <CardHeader
-                onClick={e => {
-                    if ((e.target as HTMLElement).closest("button")) return;   // 防止点击按钮的时候也触发显示详细
-                    if (sheetIsOpen) return;
-                    setShowDetailInfo(!showDetailInfo);
-                }}
-            >
-                <div {...listeners} style={{ cursor: "grab" }}>
-                    {/* 将卡片拖拽绑定到拖拽手柄上 */}
-                    <span style={{ marginRight: 8, userSelect: "none" }}>⠿</span>
-                </div>
-                <CardTitle>
-                    {todo.title}
-                </CardTitle>
-                <CardDescription>
-                    {todo.content || t('todo.emptyContent')}
-                </CardDescription>
-                <CardAction>
-                    <TodoDetailSheet todo={todo} key={todo.id} setSheetIsOpen={setSheetIsOpen}>
-                        <Button variant="ghost" size="sm">
-                            {t('todo.edit')}
-                        </Button>
-                    </TodoDetailSheet>
-                    {todo.status !== "done" ? (
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                                let nextStatus: TodoItem["status"] | undefined;
-                                if (todo.status === "pending") {
-                                    nextStatus = "in-progress";
-                                } else if (todo.status === "in-progress") {
-                                    nextStatus = "done";
-                                }
+            <CardHeader className="flex flex-col space-y-2">
+                <div className="flex justify-between items-start gap-2 w-full">
+                    {/* 拖拽手柄 */}
+                    <div {...listeners} style={{ cursor: "grab" }} className="flex items-center">
+                        <span style={{ marginRight: 8, userSelect: "none" }}>⠿</span>
+                    </div>
 
-                                if (nextStatus) {
-                                    TodoStorage.updateTodoField(todo.id, "status", nextStatus);
+                    <div className="flex items-center gap-1">
+                        {/* 编辑按钮 */}
+                        <TodoDetailSheet todo={todo} key={todo.id} setSheetIsOpen={setSheetIsOpen}>
+                            <Button variant="ghost" className="h-[24px]">
+                                {t("todo.edit")}
+                            </Button>
+                        </TodoDetailSheet>
 
-                                    // 如果完成，顺便记录完成时间
-                                    if (nextStatus === "done") {
-                                        TodoStorage.updateTodoField(todo.id, "completedAt", new Date().toISOString());
+                        {/* 状态切换/删除按钮 */}
+                        {todo.status !== "done" ? (
+                            <Button
+                                variant="outline"
+                                className="h-[24px]"
+                                onClick={() => {
+                                    let nextStatus: TodoItem["status"] | undefined;
+                                    if (todo.status === "pending") {
+                                        nextStatus = "in-progress";
+                                    } else if (todo.status === "in-progress") {
+                                        nextStatus = "done";
                                     }
 
-                                    refresh?.();
-                                }
-                            }}
-                        >
-                            {todo.status === "pending"
-                                ? (
+                                    if (nextStatus) {
+                                        TodoStorage.updateTodoField(todo.id, "status", nextStatus);
+                                        if (nextStatus === "done") {
+                                            TodoStorage.updateTodoField(todo.id, "completedAt", new Date().toISOString());
+                                        }
+                                        refresh?.();
+                                    }
+                                }}
+                            >
+                                {todo.status === "pending" ? (
                                     <>
                                         <Icon name="player-play" w="12px" h="12px" />
                                         {t("todo.start")}
                                     </>
-                                )
-                                : (
+                                ) : (
                                     <>
                                         <Icon name="flag" w="12px" h="12px" />
                                         {t("todo.markAsDone")}
                                     </>
-                                )
-                            }
-                        </Button>
-                    ) : (
-                        <AlertDialog>
-                            <AlertDialogTrigger>
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                >
-                                    {t("todo.delete")}
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>{t('dialog.deleteTodo.title')}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        {t('dialog.deleteTodo.description')}
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>{t('dialog.deleteTodo.cancel')}</AlertDialogCancel>
-                                    <AlertDialogAction
-                                        onClick={() => {
-                                            TodoStorage.deleteTodo(todo.id);
-                                            refresh?.();
-                                            console.log(1);
-                                            toast(t('toast.todoDeleted'));
-                                        }}
-                                    >
-                                        {t('dialog.deleteTodo.confirm')}
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    )}
-                </CardAction>
+                                )}
+                            </Button>
+                        ) : (
+                            <AlertDialog>
+                                <AlertDialogTrigger>
+                                    <Button variant="destructive" className="h-[24px]">
+                                        {t("todo.delete")}
+                                    </Button>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>{t("dialog.deleteTodo.title")}</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            {t("dialog.deleteTodo.description")}
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogCancel>{t("dialog.deleteTodo.cancel")}</AlertDialogCancel>
+                                        <AlertDialogAction
+                                            onClick={() => {
+                                                TodoStorage.deleteTodo(todo.id);
+                                                refresh?.();
+                                                toast(t("toast.todoDeleted"));
+                                            }}
+                                        >
+                                            {t("dialog.deleteTodo.confirm")}
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
+                        )}
+                    </div>
+                </div>
+
+                {/* 标题和描述 */}
+                <div
+                    onClick={(e) => {
+                        if ((e.target as HTMLElement).closest("button")) return;
+                        if (sheetIsOpen) return;
+                        setShowDetailInfo(!showDetailInfo);
+                    }}
+                    className="mt-2 w-full"
+                >
+                    <CardTitle>{todo.title}</CardTitle>
+                    <CardDescription>
+                        {(todo.content && todo.content.length > 100
+                            ? todo.content.slice(0, 100) + "..."
+                            : todo.content) || t("todo.emptyContent")}
+                    </CardDescription>
+                </div>
             </CardHeader>
+
             {showDetailInfo && (todo.dueDate || todo.location || (todo.tags?.length ?? 0) > 0 || (todo.attachments?.length ?? 0) > 0) && (
                 <CardFooter className="text-sm">
                     <div className="flex flex-col gap-1 w-full">
