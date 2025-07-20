@@ -111,7 +111,7 @@ export function TodoDetailSheet({ todo, setSheetIsOpen, children }: TodoDetailSh
 
                     <div>
                         <Label className="mb-2">
-                            {t('todo.priority')}
+                            {t('todo.priority.label')}
                         </Label>
                         <PrioritySelect
                             value={data.priority}

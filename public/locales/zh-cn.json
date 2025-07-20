@@ -19,9 +19,17 @@
         "tags": "标签",
         "attachments": "附件",
         "addedAttachments": "已添加{{num}}个附件",
-        "priority": "优先级",
-        "priorityMin": "最重要",
-        "priorityMax": "最不重要",
+        "priority": {
+            "label": "优先级",
+            "placeholder": "选择优先级",
+            "priorityMin": "最重要",
+            "priorityMax": "最不重要",
+            "0": "紧急",
+            "1": "重要",
+            "2": "一般",
+            "3": "次要",
+            "4": "无"
+        },
         "status": {
             "label": "状态",
             "placeholder": "选择状态",
