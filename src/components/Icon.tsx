@@ -1,7 +1,9 @@
 import MapPin from '../assets/icon/map-pin.svg';
+import CalendarTime from '../assets/icon/calendar-time.svg';
 
 const IconList: Record<string, string> = {
-    'map-pin': MapPin
+    'map-pin': MapPin,
+    'calendar-time': CalendarTime
 };
 
 interface IconProps {
@@ -22,7 +24,7 @@ function Icon({ name, w = '18px', h = '18px', alt = '', className = '', ...props
         return null;
     }
 
-    return <img src={src} alt={alt || name} className={`w-[${w}] h-[${h}] ${className}`} {...props} />;
+    return <img src={src} alt={alt || name} className={`${className}`} style={{ width: w, height: h }} {...props} />;
 }
 
 export default Icon;
