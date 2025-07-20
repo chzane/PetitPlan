@@ -1,1 +1,34 @@
-{}
+{
+    "app": {
+        "title": "Petit Plan",
+        "description": "小计划，大自在。让每一天，从 PetitPlan 开始。"
+    },
+    "todo": {
+        "title": "标题",
+        "content": "内容",
+        "dueDate": "截止日期",
+        "dueDateReminderSentence": "截止至 {{date}}",
+        "location": "位置",
+        "tags": "标签",
+        "attachments": "附件",
+        "addedAttachments": "已添加{{num}}个附件",
+        "status": {
+            "todo": "未开始",
+            "inProgress": "进行中",
+            "done": "已完成"
+        },
+        "repeatRule": {
+            "none": "不重复",
+            "daily": "每日",
+            "weekly": "每周",
+            "monthly": "每月"
+        },
+        "markAsDone": "标记为完成",
+        "completed": "已完成",
+        "add": "添加任务",
+        "edit": "编辑任务",
+        "delete": "删除任务",
+        "save": "保存",
+        "cancel": "取消"
+    }
+}
