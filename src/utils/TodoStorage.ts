@@ -3,8 +3,9 @@
 // 附件
 export interface Attachment {
     id: string;   // 附件 ID
+    todoId: string;   // 待办任务 ID
     type: 'image' | 'file' | 'link';   // 附件类型
-    url: string;   // 附件地址
+    path: string;   // 附件路径
     name?: string;   // 附件名称
 }
 
