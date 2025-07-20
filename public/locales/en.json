@@ -38,12 +38,25 @@
         "markAsDone": "Mark as done",
         "start": "Start",
         "completed": "Completed",
-        "createTodoTitle": "Create Task",
+        "createTodoTitle": "Create Task, press Control (or Command) + Enter to create",
         "add": "Add Task",
         "edit": "Edit Task",
         "delete": "Delete Task",
         "save": "Save",
         "cancel": "Cancel",
         "viewDetails": "View Details"
+    },
+    "dialog": {
+        "deleteTodo": {
+            "title": "Are you sure you want to delete this task?",
+            "description": "This action cannot be undone.",
+            "cancel": "Cancel",
+            "confirm": "Delete"
+        }
+    },
+    "toast": {
+        "todoCreated": "Task created successfully",
+        "todoUpdated": "Task updated successfully",
+        "todoDeleted": "Task deleted successfully"
     }
 }

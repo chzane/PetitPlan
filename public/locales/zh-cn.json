@@ -45,5 +45,18 @@
         "delete": "删除任务",
         "save": "保存",
         "cancel": "取消"
+    },
+    "dialog": {
+        "deleteTodo": {
+            "title": "您真的要删除该任务吗？",
+            "description": "一旦删除将无法恢复",
+            "cancel": "取消",
+            "confirm": "确认删除"
+        }
+    },
+    "toast": {
+        "todoCreated": "任务已创建",
+        "todoUpdated": "任务已更新",
+        "todoDeleted": "任务已删除"
     }
 }

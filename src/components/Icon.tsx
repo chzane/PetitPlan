@@ -2,12 +2,16 @@ import { ReactComponent as MapPin } from '../assets/icon/map-pin.svg';
 import { ReactComponent as CalendarTime } from '../assets/icon/map-pin.svg';
 import { ReactComponent as Link } from '../assets/icon/map-pin.svg';
 import { ReactComponent as Box } from '../assets/icon/box.svg';
+import { ReactComponent as PlayerPlay} from '../assets/icon/player-play.svg';
+import { ReactComponent as Flag } from '../assets/icon/flag.svg';
 
 const IconList: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     'map-pin': MapPin,
     'calendar-time': CalendarTime,
     'link': Link,
-    'box': Box
+    'box': Box,
+    'player-play': PlayerPlay,
+    'flag': Flag
 };
 
 interface IconProps {

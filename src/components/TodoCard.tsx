@@ -12,12 +12,24 @@ import {
     SheetContent,
     SheetTrigger,
 } from "@/components/ui/sheet"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "react-i18next"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
 import Icon from "@/components/Icon"
 import DatePicker from "@/components/DatePicker"
 import TagInput from "@/components/TagInput"
@@ -136,7 +148,7 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
     const [sheetIsOpen, setSheetIsOpen] = useState(false);   // 侧边栏是否已经开启
 
     useEffect(() => {
-        if (refresh) refresh();
+        refresh?.();
     }, [sheetIsOpen]);
 
     return (
@@ -164,7 +176,7 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
                             {t('todo.edit')}
                         </Button>
                     </TodoDetailSheet>
-                    {todo.status !== "done" && (
+                    {todo.status !== "done" ? (
                         <Button
                             variant="outline"
                             size="sm"
@@ -189,10 +201,52 @@ function TodoCard({ todo, refresh, listeners }: TodoCardProps) {
                             }}
                         >
                             {todo.status === "pending"
-                                ? t("todo.start")
-                                : t("todo.markAsDone")
+                                ? (
+                                    <>
+                                        <Icon name="player-play" w="12px" h="12px" />
+                                        {t("todo.start")}
+                                    </>
+                                )
+                                : (
+                                    <>
+                                        <Icon name="flag" w="12px" h="12px" />
+                                        {t("todo.markAsDone")}
+                                    </>
+                                )
                             }
                         </Button>
+                    ) : (
+                        <AlertDialog>
+                            <AlertDialogTrigger>
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                >
+                                    {t("todo.delete")}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{t('dialog.deleteTodo.title')}</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        {t('dialog.deleteTodo.description')}
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t('dialog.deleteTodo.cancel')}</AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={() => {
+                                            TodoStorage.deleteTodo(todo.id);
+                                            refresh?.();
+                                            console.log(1);
+                                            toast(t('toast.todoDeleted'));
+                                        }}
+                                    >
+                                        {t('dialog.deleteTodo.confirm')}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                     )}
                 </CardAction>
             </CardHeader>
